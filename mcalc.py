@@ -1,17 +1,16 @@
 
 import copy
 import sys
-import numpy as np
+from numpy import linalg
 from exeptions import MatrixExeption
 
-class Matrix():
+class Matrix(list):
     def __init__(self, *args) -> None:
 
         rows = int(input('Введите горизонтальную размерность матрицы: '))
         cols = int(input('Введите вертикальную размерность матрицы: '))
         if rows <= 0 or cols <= 0:
             raise MatrixExeption("Недопустимая размерность! \n")
-        
         else:
             self.rows = rows ## m
             self.cols = cols ## n
@@ -64,7 +63,7 @@ class Matrix():
         else:
             return [[self.mas[i][j] + number for j in range(rows)] for i in range(cols)]
 
-    def replacing_rows(self,rows,cols, *args) -> list[list[float]]:
+    def replacing_rows(self,rows,*args) -> list[list[float]]:
 
         '''1-й тип элементарных преобразований матриц.
 
@@ -171,208 +170,15 @@ class Matrix():
         elif rows == 2:
             return self.mas[0][0]*self.mas[1][1]-self.mas[0][1]*self.mas[1][0]
         else:
-            return round(np.linalg.det(self.mas))
+            return round(linalg.det(self.mas))
             
-# def minor(matrix, i, j,m,n ):
-#     '''Находит минор матрицы. 
-    
-#     Работает только внутри функций. \nНеобходимы параметры i и j (индексы)
-#     Используйте вложенный цикл for ... in range
-#     Возвращает М
-#     '''
-#     global M
-#     M = copy.deepcopy(matrix)  
-#     m = len(matrix)
-#     n = len(matrix[0])
-#     del M[i]
-#     m = len(matrix)
-#     n = len(matrix[0])
-#     for i in range(m-1):
-#         del M[i][j]
-    
-# def determinator(matrix):
-#     '''Находит определитель матрицы.
-    
-#     Матрица должна быть квадратной.
-#     Возвращает det
-#     '''
-#     global det
-#     m = len(matrix)
-#     n = len(matrix[0])
-#     if m != n:
-#         print('///Не квадратная матрица!')
-#     if n == 1:
-#         return matrix[0][0]
-#     signum = 1
-#     det = 0
-#     # разложение по первой строке
-#     for j in range(n):
-#         det += matrix[0][j]*signum*determinator( minor(matrix, 0, j,m,n) ) 
-#         signum *= -1
-#     return det
+    def reverse_matrix(self,rows,cols) -> list[list[float]]:
 
-def reverse_matrix(matrix):
-    '''Находит обратную матрицу.
-    
-    Возвращает result_matrix
-    '''
-    global dop
-    global dop_matrix
-    global result_matrix
-    result_matrix = []
-    dop_matrix_st = []
-    dop_matrix = []
-    m = len(matrix)
-    n = len(matrix[0])
-    if m != n:
-        print('------Матрица не квадратная!------')
-    else:
-        signum = 1
-        dop = 0
-        a = 2
-        # разложение по первой строке
-        for i in range(n):
-            dop_matrix_st = []
-            for j in range(m):
-                a +=1
-                if (i + j) %2 == 1:
-                    signum =(-1)
-                else:
-                    signum = 1
-                dop = signum*determinator(minor(matrix, i, j,m,n)) 
-                dop_matrix_st.append(dop)
-            dop_matrix.append(dop_matrix_st)
-        transpond(dop_matrix,m,n)
-        a = trans_matrix
-        b = determinator(matrix)
-        r ='RESULT'
-        r1 = r.center(len(r)+22,'=')
-        print('\n')
-        print('\t',f'{r1}','\t')
-        
-        for row in a:
-            print(("  {:^5}  "*n).format(*row))
-        print(' '*(10*n-3),'|* 1/',b,'|')
-    
+        if rows != cols:
+            raise MatrixExeption("Матрица не квадратная! ")
+        else:
+            linalg.inv(self.mas)
+            
+    def rank(self):
+        linalg.matrix_rank(self.mas)
 
-
-def rang(matrix,m,n): #####хуйня с индесками
-    '''Находит ранг матрицы.
-    
-    Возвращает rangg
-    '''
-    global rank
-    if matrix[0][0] == 0:
-        rank = 0
-        return rank
-    else:
-        rank = 0
-        i = 1
-        j = 1
-        
-        while rank <= m and rank <= n:
-            for i in range(n):
-                for j in range(n):
-                    mat = matrix
-                    determinator(minor(mat,i,j,m,n))
-                    if det != 0:
-                        rank +=1
-        rank = rank/m -1
-        
-        
-        return print(rank)
-####### MAIN ########
-# def main_f():
-
-#     print('Калькулятор матриц mcalc // ver1.6\t\n ')
-#     print('\t\tВыберите операцию:\t ')
-#     print('     1 --- умножить матрицу на число \n \
-#     2 --- умножить 2 матрицы \n \
-#     3 --- сложить 2 матрицы \n \
-#     4 --- транспонировать матрицу \n \
-#     _______элементарные преобразования______ \n \
-#     5 --- поменять местами 2 столбца \n \
-#     6 --- поменять местами 2 строки \n \
-#     7 --- умножить строку на число \n \
-#     8 --- умножить столбец на число \n \
-#     9 --- сложить со строкой I строку II умноженную на число ')
-#     print('     ______________________________________')
-#     print('     10 --- найти определитель квадратной матрицы \n \
-#     11 -- найти обратную матицу \n ')
-
-#     choose = int(input('Выбор: '))
-#     if choose == 1:
-#         creating()
-#         x = int(input('Введите множитель: '))
-#         multiplication_simple(matrix,x)
-#         for i in range (-1,m-1):
-#             i += 1
-#             print(result_matrix[i], '\n')
-#     elif choose == 2:
-#         double_creating()
-#         multiplication_hard(matrix1,matrix2)
-#         for i in range (-1,m1-1):
-#             i += 1
-#             print(result_matrix[i], '\n')
-#     elif choose == 3:
-#         double_creating()
-#         addition(matrix1,matrix2)
-#         for i in range (-1,m1-1):
-#             i += 1
-#             print(result_matrix[i], '\n')
-#     elif choose == 4:
-#         print('///Помните, матрица должна быть квадратной')
-#         creating()
-#         for i in range (-1,m-1):
-#             i += 1
-#             print(trans_matrix[i], '\n')
-#     elif choose == 5:
-#         creating()
-#         replacing_cols(matrix)
-#         for i in range (-1,m-1):
-#             i += 1
-#             print(result_matrix[i], '\n')
-#     elif choose == 6:
-#         creating()
-#         replacing_rows(matrix)
-#         for i in range (-1,m-1):
-#             i += 1
-#             print(result_matrix[i], '\n')
-#     elif choose == 7:
-#         creating()
-#         row_multiplication(matrix)
-#         for i in range (-1,m-1):
-#             i += 1
-#             print(result_matrix[i], '\n')
-#     elif choose == 8:
-#         creating()
-#         col_multiplication(matrix)
-#         for i in range (-1,m-1):
-#             i += 1
-#             print(result_matrix[i], '\n')
-#     elif choose == 9:
-#         creating()
-#         linear_add(matrix)
-#         for i in range (-1,m-1):
-#             i += 1
-#             print(result_matrix[i], '\n')
-#     elif choose == 10:
-#         print('///Помните, матрица должна быть квадратной')
-#         creating()
-#         determinator(matrix)
-#         print(det)
-#     elif choose == 11:
-#         try:
-#             creating()
-#             reverse_matrix(matrix)
-#         except:
-#             print('Что-то пошло не так!')
-
-# print('\nНажмите Enter для выхода.')
-# try:
-#     for i in range(100):
-#         main_f()
-# except ValueError:
-#     print('Программа приостановлена.')
-#     sys.exit(0)
-    
