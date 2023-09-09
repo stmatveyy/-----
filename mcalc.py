@@ -162,23 +162,17 @@ class Matrix():
             del minor_mas[i][j]
         return minor_mas
 
-    def determinator(self, *args) -> int:
-        rows = len(self.mas)
-        cols = len(self.mas[0])
-
+    def determinator(self, rows, cols) -> int:
+        
         if rows != cols:
             raise MatrixExeption("Недопустимый размер матрицы! \n")
         elif rows == 1:
             return self.mas[0][0]
-        
+        elif rows == 2:
+            return self.mas[0][0]*self.mas[1][1]-self.mas[0][1]*self.mas[1][0]
         else:
-            signum = 1
-            det = 0
-            for j in range(cols):
-                minor_mat = self.minor(i=0, j=j, rows=rows)
-                det += self.mas[0][j] * signum * self.determinator(minor_mat) 
-                signum *= -1
-            return det
+            return round(np.linalg.det(self.mas))
+            
 # def minor(matrix, i, j,m,n ):
 #     '''Находит минор матрицы. 
     
